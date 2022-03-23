@@ -5,7 +5,7 @@ This project would not have been possible without:
 D.Finck (Space Invaders Emulator for Dreamcast)
 Neil Bradley (monster z80 cpu core)
 
-If you would like to continue this project, please contact me gbaemu@email.com
+If you would like to continue this project, please contact me
 
 PLEASE NOTE THIS IS NOT A SUPPORT ADDRESS!
 
