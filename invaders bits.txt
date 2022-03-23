@@ -1,0 +1,120 @@
+
+D.21  Space Invaders
+
+   [provided by Nemoto Yohei (BYY03025@niftyserve.or.jp)]
+   [additional info (*) provided by Ignacio Escalza (marconi@arrakis.es)]
+
+   note - The Sound port is uncomplete!
+   1996.7.20 Ryusendo/Root
+
+D.21.1   Board Spec
+
+   CPU      8080, i8080 is lower-compatible chip of Z80-CPU
+   RAM      8kbytes, i8kSRAM @8 piece
+   ROM      8kbytes, i16kEPROM @4 piece
+   SOUND    Sound Effect with analog circuit
+   Input Device   2way stick + 1 button *2
+                  coin switch, 1Player start, 2Player start
+                  TILT switch
+
+D.21.2   Memory Map
+
+    0000h          +--------------------------+
+                   | Program ROM              |
+                   |                          |
+                   |                          |
+                   |                          |
+                   |                          |
+                   |                          |
+                   |                          |
+    1FFFh          |                          |
+                   +--------------------------+
+    2000h          | Work RAM                 |
+    23ffh          |                          |
+                   +--------------------------+
+    2400h          |                          |
+                   | Video RAM                |
+                   |                          |
+                   |                          |
+                   |                          |
+    3FFFh          +--------------------------+
+                   |                          |
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    FFFFh          |  Not Used                |
+                   +--------------------------+
+   
+   I/O map
+   -------
+
+   *** Port 1
+   [IN]Controller
+   
+   bit 0=CREDIT (0 if deposit)
+   bit 1=2P start(1 if pressed)
+   bit 2=1P start(1 if pressed)
+   bit 3=It's not TILT.                     (*)
+   bit 4=shot(1 if pressed)
+   bit 5=left(1 if pressed)
+   bit 6=right(1 if pressed)
+   bit 7=Always 1
+   
+   *** Port 2
+   [IN]Controller
+   bit 0=Always 0
+   bit 1=Always 0
+   bit 2=1 if TILT                          (*)
+   bit 3=Preset Mode button (in combination with 1P Start or 2P Start)  (*)
+   bit 4=shot(1 if pressed)   \             (*)
+   bit 5=left(1 if pressed)    >Player 2    (*)
+   bit 6=right(1 if pressed)  /             (*)
+   bit 7=Always 0
+   [OUT]Shift Value
+   
+   *** Port 3                               (*)
+   [IN]Shifted Bitmap
+   Port3= word formed by Port4(MSB) and the previous state of port 4(LSB)
+   shifted left by the number of "Shift Value" (Port 2). Port 3 gets the
+   MSB of the result.
+      ex.   LD a,3
+         OUT (2),a
+         LD a,10110011b
+         out (4),a
+         in a,(3) ; reg a is 10011000b (If previous value of port 4 was 0)
+         LD a,110010001b
+         out (4),a
+         in a,(3) ; reg a is 10001101b
+
+   [OUT]Sound
+    bit 0=UFO
+    bit 1=Shot
+    bit 2=Base Hit                          (*)
+    bit 3=Invader Hit                       (*)
+    bit 4=???
+    bit 5=Activated almost anytime while playing.     (*)
+    bit 6=???
+    bit 7=???
+   
+   *** Port 4
+   [OUT]Bitmap
+   
+   *** Port 5
+   [OUT]Sound, port 2
+    bit 0=Invader Walk 1
+    bit 1=Invader Walk 2
+    bit 2=Invader Walk 3
+    bit 3=Invader Walk 4
+    bit 4=UFO hit
+    bit 5=???
+    bit 6=???
+    bit 7=???
+   
+   *** Port 6
+   [OUT]???
+
+D.21.3   Sound Information
+
+   [provided by John Manfreda (jmanfred@fh.us.bosch.com)]
+
+   Discrete circuits are used to generate all of the sound on space
+   invaders. Each sound generated has its own unique analog circuit.
